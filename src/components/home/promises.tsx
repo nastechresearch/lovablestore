@@ -1,14 +1,19 @@
-import { Gift, Globe2, ShieldCheck, Truck } from "lucide-react";
+import {
+  CourierVan,
+  GiftRibbon,
+  Plane,
+  ShieldCheck,
+} from "@/components/icons/atelier-icons";
 import { Reveal } from "@/components/motion/reveal";
 
 const PROMISES = [
   {
-    icon: Truck,
+    icon: CourierVan,
     title: "Nationwide, tracked",
     copy: "2–5 days from our local partners. Global finds show their own timeline upfront.",
   },
   {
-    icon: Gift,
+    icon: GiftRibbon,
     title: "Wrapped, not just packed",
     copy: "Signature wrap, ribbon and a handwritten note on every single order.",
   },
@@ -18,7 +23,7 @@ const PROMISES = [
     copy: "PayFast card and EFT. Every price in rand, with no surprise duties.",
   },
   {
-    icon: Globe2,
+    icon: Plane,
     title: "Two sources, one standard",
     copy: "Local stock where it matters, vetted global partners for the rare find.",
   },
@@ -41,7 +46,6 @@ export function Promises() {
             >
               <Icon
                 className="mt-0.5 size-5 shrink-0 text-champagne-dark"
-                strokeWidth={1.3}
                 aria-hidden
               />
               <div>

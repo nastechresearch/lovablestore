@@ -137,8 +137,15 @@ function FooterColumn({
       <ul className="mt-5 space-y-3 text-sm text-ivory/65">
         {links.map((link) => (
           <li key={link.href}>
-            <Link href={link.href} className="transition-colors hover:text-ivory">
+            <Link
+              href={link.href}
+              className="group relative inline-block transition-colors hover:text-ivory"
+            >
               {link.label}
+              <span
+                className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-current transition-transform duration-300 group-hover:scale-x-100"
+                aria-hidden
+              />
             </Link>
           </li>
         ))}

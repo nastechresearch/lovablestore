@@ -23,6 +23,7 @@ import { checkPromoAction } from "@/actions/promo";
 import type { PromoCheck } from "@/actions/promo";
 import { useCart } from "@/components/cart/cart-provider";
 import { CardPayment } from "@/components/checkout/card-payment";
+import { CheckoutProgress } from "@/components/checkout/checkout-progress";
 import { LocationFields } from "@/components/checkout/location-fields";
 import { formatZAR, shippingForSubtotal } from "@/lib/format";
 import { needsPlainImage } from "@/lib/products";
@@ -55,6 +56,7 @@ export function CheckoutForm({
   const [promoError, setPromoError] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const cardValidatorRef = useRef<(() => boolean) | null>(null);
+  const [confirmed, setConfirmed] = useState(false);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     const validator = cardValidatorRef.current;
@@ -166,6 +168,8 @@ export function CheckoutForm({
       <input type="hidden" name="promoCode" value={applied?.ok ? promoCode : ""} />
 
       <div className="space-y-10">
+        <CheckoutProgress confirmed={confirmed} />
+
         {cancelled ? (
           <div className="border border-champagne-dark/40 bg-champagne/10 p-4 text-[12px] leading-relaxed text-ink-soft">
             Payment was cancelled at PayFast. Your bag is still here — try again
@@ -294,7 +298,10 @@ export function CheckoutForm({
               formRef={formRef}
               errorSignal={state.status === "error" ? state.message : ""}
               validatorRef={cardValidatorRef}
-              onConfirm={() => formRef.current?.requestSubmit()}
+              onConfirm={() => {
+                setConfirmed(true);
+                formRef.current?.requestSubmit();
+              }}
               onBlocked={() =>
                 document
                   .getElementById("payment-heading")

@@ -7,6 +7,8 @@ import { requireUser } from "@/lib/auth";
 import { formatDate, formatZAR } from "@/lib/format";
 import { STATUS_LABELS } from "@/lib/constants";
 import { needsPlainImage } from "@/lib/products";
+import { CountUp } from "@/components/motion/count-up";
+import { StaggerGroup, StaggerItem } from "@/components/motion/reveal";
 
 export const dynamic = "force-dynamic";
 
@@ -49,11 +51,15 @@ export default async function AccountOrdersPage() {
         <div className="mt-5 grid grid-cols-2 gap-3 sm:max-w-md">
           <div className="border border-line bg-cream px-4 py-3">
             <p className="text-[9px] uppercase tracking-[0.14em] text-stone">Orders placed</p>
-            <p className="mt-1 font-display text-2xl leading-none">{orders.length}</p>
+            <CountUp value={orders.length} className="mt-1 block font-display text-2xl leading-none" />
           </div>
           <div className="border border-line bg-cream px-4 py-3">
             <p className="text-[9px] uppercase tracking-[0.14em] text-stone">Paid to date</p>
-            <p className="mt-1 font-display text-2xl leading-none">{formatZAR(lifetime)}</p>
+            <CountUp
+              value={lifetime}
+              currency
+              className="mt-1 block font-display text-2xl leading-none"
+            />
           </div>
         </div>
       ) : null}
@@ -71,13 +77,14 @@ export default async function AccountOrdersPage() {
           </Link>
         </div>
       ) : (
-        <ul className="mt-8 space-y-4">
-          {orders.map((order) => {
-            const tracking = order.trackingNumber
-              ? `${order.courier ? `${order.courier} · ` : ""}${order.trackingNumber}`
-              : null;
-            return (
-              <li key={order.id} className="border border-line bg-cream">
+        <StaggerGroup className="mt-8">
+          <ul className="space-y-4">
+            {orders.map((order) => {
+              const tracking = order.trackingNumber
+                ? `${order.courier ? `${order.courier} · ` : ""}${order.trackingNumber}`
+                : null;
+              return (
+                <StaggerItem as="li" key={order.id} className="border border-line bg-cream">
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-ivory-deep/25 px-4 py-3">
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] uppercase tracking-[0.1em]">
                     <span className="font-medium text-ink">{order.number}</span>
@@ -148,10 +155,11 @@ export default async function AccountOrdersPage() {
                     </Link>
                   </div>
                 </div>
-              </li>
-            );
-          })}
-        </ul>
+                </StaggerItem>
+              );
+            })}
+          </ul>
+        </StaggerGroup>
       )}
     </div>
   );

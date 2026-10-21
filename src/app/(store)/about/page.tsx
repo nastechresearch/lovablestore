@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Gem, HandHeart, MapPin, PackageCheck, Sparkles } from "lucide-react";
 import { InfoPage } from "@/components/content/info-page";
+import { RouteMotif } from "@/components/delivery/route-motif";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/reveal";
 import { SA_PROVINCES, SA_PLACES } from "@/lib/sa-locations";
 
@@ -163,6 +164,7 @@ export default function AboutPage() {
               <MapPin className="size-3.5 text-champagne-dark" aria-hidden />
               Studio in Johannesburg · nationwide courier
             </div>
+            <RouteMotif />
             <p className="mt-3 text-[10px] leading-relaxed text-stone">
               Free delivery from R950. Below that, a flat R85 anywhere in South Africa.
             </p>
