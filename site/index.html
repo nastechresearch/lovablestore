@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en-ZA">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Lovable Store — Where magic gift starts from</title>
+    <meta
+      name="description"
+      content="Watches, fragrance, fashion and gifts, wrapped by hand in Johannesburg and delivered across South Africa. Install the Lovable Store app."
+    />
+    <meta name="theme-color" content="#f8f3eb" />
+    <link rel="icon" href="assets/app-icon.png" />
+    <style>
+      :root {
+        --ivory: #f8f3eb;
+        --cream: #fffaf3;
+        --ink: #241c18;
+        --ink-soft: #6b5c52;
+        --oxblood: #5b1b2a;
+        --champagne: #b08d57;
+        --line: rgba(36, 28, 24, 0.12);
+        --shadow: 0 30px 80px -40px rgba(36, 28, 24, 0.45);
+        color-scheme: light;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background-color: var(--ivory);
+        background-image:
+          linear-gradient(to right, rgba(36, 28, 24, 0.045) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(36, 28, 24, 0.045) 1px, transparent 1px);
+        background-size: 72px 72px;
+        color: var(--ink);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .shell {
+        width: min(1160px, calc(100% - 2.5rem));
+        margin-inline: auto;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        min-height: 76px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: flex;
+        align-items: baseline;
+        gap: 0.4rem;
+        color: inherit;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(1.3rem, 3vw, 1.7rem);
+        letter-spacing: 0.01em;
+        text-decoration: none;
+      }
+
+      .brand span {
+        color: var(--oxblood);
+      }
+
+      header nav {
+        display: flex;
+        align-items: center;
+        gap: 1.35rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      header nav a {
+        color: var(--ink-soft);
+        text-decoration: none;
+      }
+
+      header nav a:hover {
+        color: var(--oxblood);
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        min-height: 48px;
+        padding: 0 1.5rem;
+        border: 1px solid var(--oxblood);
+        border-radius: 999px;
+        background: var(--oxblood);
+        color: #fff8f2;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: transform 160ms ease, background-color 160ms ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+        background: #481321;
+      }
+
+      .button.ghost {
+        background: transparent;
+        color: var(--ink);
+        border-color: var(--line);
+      }
+
+      .button.ghost:hover {
+        background: rgba(36, 28, 24, 0.04);
+      }
+
+      main {
+        padding-bottom: 4rem;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        align-items: center;
+        gap: clamp(2rem, 6vw, 5rem);
+        padding: clamp(3rem, 8vw, 6rem) 0 clamp(2.5rem, 6vw, 4.5rem);
+      }
+
+      .eyebrow {
+        margin: 0 0 1rem;
+        color: var(--champagne);
+        font-size: 0.66rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2.8rem, 7vw, 5.3rem);
+        font-weight: 400;
+        letter-spacing: -0.03em;
+        line-height: 0.98;
+      }
+
+      h1 em {
+        color: var(--oxblood);
+        font-weight: 400;
+      }
+
+      .lede {
+        max-width: 34rem;
+        margin: 1.6rem 0 0;
+        color: var(--ink-soft);
+        font-size: clamp(1rem, 1.6vw, 1.13rem);
+        line-height: 1.7;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 2rem;
+      }
+
+      .note {
+        margin: 1.5rem 0 0;
+        color: var(--ink-soft);
+        font-size: 0.66rem;
+        letter-spacing: 0.13em;
+        line-height: 1.9;
+        text-transform: uppercase;
+      }
+
+      .visual {
+        position: relative;
+        justify-self: end;
+        width: min(100%, 400px);
+      }
+
+      .phone {
+        position: relative;
+        overflow: hidden;
+        border: 10px solid #1d1713;
+        border-radius: 2.6rem;
+        background: #1d1713;
+        box-shadow: var(--shadow);
+      }
+
+      .phone::before {
+        content: "";
+        position: absolute;
+        top: 0.55rem;
+        left: 50%;
+        z-index: 2;
+        width: 5.5rem;
+        height: 1.25rem;
+        border-radius: 999px;
+        background: #1d1713;
+        transform: translateX(-50%);
+      }
+
+      .phone img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 9 / 15.5;
+        object-fit: cover;
+      }
+
+      .phone-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.9rem 1rem;
+        background: var(--cream);
+        font-size: 0.6rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .phone-bar span:first-child {
+        font-family: Georgia, serif;
+        font-size: 0.9rem;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      .chip {
+        position: absolute;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.65rem 0.9rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 250, 243, 0.95);
+        box-shadow: 0 16px 40px -22px rgba(36, 28, 24, 0.6);
+        color: var(--ink);
+        font-size: 0.6rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        backdrop-filter: blur(10px);
+      }
+
+      .chip.one {
+        top: 16%;
+        left: -1.4rem;
+      }
+
+      .chip.two {
+        right: -1rem;
+        bottom: 19%;
+      }
+
+      .chip svg {
+        color: var(--oxblood);
+      }
+
+      .section-title {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(1.9rem, 4vw, 3rem);
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+
+      .features {
+        padding: clamp(2.5rem, 6vw, 4rem) 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1px;
+        margin-top: 2.5rem;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 1.6rem;
+        background: var(--line);
+      }
+
+      .feature {
+        padding: 1.8rem;
+        background: var(--cream);
+      }
+
+      .feature svg {
+        color: var(--oxblood);
+      }
+
+      .feature h3 {
+        margin: 1rem 0 0.5rem;
+        font-family: Georgia, serif;
+        font-size: 1.25rem;
+        font-weight: 400;
+      }
+
+      .feature p {
+        margin: 0;
+        color: var(--ink-soft);
+        font-size: 0.88rem;
+        line-height: 1.65;
+      }
+
+      .install {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+        gap: clamp(2rem, 5vw, 4rem);
+        align-items: center;
+        margin-top: 1rem;
+        padding: clamp(2.5rem, 6vw, 4rem) 0 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .install-copy p {
+        max-width: 32rem;
+        color: var(--ink-soft);
+        line-height: 1.7;
+      }
+
+      .steps {
+        display: grid;
+        gap: 0.9rem;
+        margin: 1.8rem 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .steps li {
+        display: flex;
+        gap: 0.9rem;
+        align-items: flex-start;
+        padding: 1rem 1.1rem;
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: var(--cream);
+        font-size: 0.9rem;
+        line-height: 1.55;
+      }
+
+      .steps b {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        width: 1.7rem;
+        height: 1.7rem;
+        border-radius: 999px;
+        background: var(--oxblood);
+        color: #fff8f2;
+        font-size: 0.68rem;
+      }
+
+      .install-card {
+        padding: 2rem;
+        border-radius: 1.6rem;
+        background: var(--oxblood);
+        color: #fdf4ee;
+        box-shadow: var(--shadow);
+      }
+
+      .install-card img {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+      }
+
+      .install-card h3 {
+        margin: 1.2rem 0 0.6rem;
+        font-family: Georgia, serif;
+        font-size: 1.7rem;
+        font-weight: 400;
+      }
+
+      .install-card p {
+        margin: 0;
+        color: rgba(253, 244, 238, 0.78);
+        font-size: 0.9rem;
+        line-height: 1.65;
+      }
+
+      .install-card .button {
+        width: 100%;
+        margin-top: 1.5rem;
+        background: #fdf4ee;
+        color: var(--oxblood);
+        border-color: #fdf4ee;
+      }
+
+      .install-card .button:hover {
+        background: #f1e3d8;
+      }
+
+      .install-card small {
+        display: block;
+        margin-top: 0.9rem;
+        color: rgba(253, 244, 238, 0.65);
+        font-size: 0.62rem;
+        letter-spacing: 0.1em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 2rem 0 2.5rem;
+        border-top: 1px solid var(--line);
+        color: var(--ink-soft);
+        font-size: 0.75rem;
+      }
+
+      footer a {
+        color: inherit;
+      }
+
+      @media (max-width: 860px) {
+        .hero,
+        .install {
+          grid-template-columns: 1fr;
+        }
+
+        .visual {
+          justify-self: center;
+          width: min(100%, 340px);
+          margin-top: 1rem;
+        }
+
+        .feature-grid {
+          grid-template-columns: 1fr;
+        }
+
+        header nav a:not(.button) {
+          display: none;
+        }
+
+        header nav {
+          gap: 0;
+        }
+
+        .chip.one {
+          left: -0.5rem;
+        }
+
+        .chip.two {
+          right: -0.25rem;
+        }
+
+        .install-card {
+          order: -1;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .shell {
+          width: calc(100% - 1.6rem);
+        }
+
+        .hero {
+          padding-top: 2.25rem;
+        }
+
+        .actions .button {
+          width: 100%;
+        }
+
+        .chip {
+          font-size: 0.52rem;
+          padding: 0.55rem 0.7rem;
+        }
+
+        .feature {
+          padding: 1.4rem;
+        }
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --ivory: #12100e;
+          --cream: #1a1613;
+          --ink: #f4ede3;
+          --ink-soft: #b7aa9c;
+          --oxblood: #c85a70;
+          --champagne: #d6b985;
+          --line: rgba(244, 237, 227, 0.12);
+          color-scheme: dark;
+        }
+
+        body {
+          background-image:
+            linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+        }
+
+        .button {
+          color: #1a1013;
+        }
+
+        .button:hover {
+          background: #e06f86;
+        }
+
+        .button.ghost {
+          color: var(--ink);
+        }
+
+        .chip {
+          background: rgba(26, 22, 19, 0.95);
+        }
+
+        .install-card {
+          background: #3c1520;
+          color: #fdf4ee;
+        }
+
+        .install-card .button {
+          background: #fdf4ee;
+          color: #3c1520;
+          border-color: #fdf4ee;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="shell">
+      <a class="brand" href="./">Lovable <span>·</span> Store</a>
+      <nav aria-label="Main">
+        <a href="#features">Why Lovable</a>
+        <a href="#install">Install</a>
+        <a class="button" href="__STORE_URL__">Open store</a>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Johannesburg · South Africa</p>
+          <h1>Where <em>magic</em> gift starts from.</h1>
+          <p class="lede">
+            Watches, fragrance, fashion and keepsakes — chosen in Johannesburg,
+            wrapped by hand, and sent anywhere in South Africa. Local pieces
+            arrive in 2–5 days; global finds come direct from our vetted
+            partners.
+          </p>
+          <div class="actions">
+            <a class="button" href="__STORE_URL__">Open the live store</a>
+            <a class="button ghost" href="#install">Install the app</a>
+          </div>
+          <p class="note">
+            Free delivery over R950 · Gift wrap included · PayFast secure checkout
+          </p>
+        </div>
+
+        <div class="visual">
+          <div class="chip one">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7Z"/><path d="M12 7h4.5a2.5 2.5 0 1 0 0-5C13 2 12 7 12 7Z"/></svg>
+            Wrapped by hand
+          </div>
+          <div class="phone">
+            <img
+              src="assets/hero-gifts.jpg"
+              alt="A Lovable Store gift box being wrapped with a ribbon"
+            />
+            <div class="phone-bar">
+              <span>Lovable Store</span>
+              <span>Shop · Bag · Track</span>
+            </div>
+          </div>
+          <div class="chip two">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 9h18"/><path d="M3 15h18"/><path d="M12 3v18"/></svg>
+            2–5 day delivery
+          </div>
+        </div>
+      </section>
+
+      <section class="features" id="features">
+        <h2 class="section-title">Considered from the first tap.</h2>
+        <div class="feature-grid">
+          <div class="feature">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <h3>100 curated pieces</h3>
+            <p>
+              Watches, scent, fashion, shoes and gifts — each piece shows its
+              source, delivery window and real reviews before you buy.
+            </p>
+          </div>
+          <div class="feature">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h2"/></svg>
+            <h3>PayFast checkout</h3>
+            <p>
+              Secure, local payment with encrypted details, Passkey sign-in
+              and order tracking under your own Lovable account ID.
+            </p>
+          </div>
+          <div class="feature">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <h3>Made for Mzansi</h3>
+            <p>
+              Valentine's, Heritage Day, gifting season and payday moments —
+              with delivery estimates that follow South African routes.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="install" id="install">
+        <div class="install-copy">
+          <p class="eyebrow">Install in under a minute</p>
+          <h2 class="section-title">Your store, one tap away.</h2>
+          <p>
+            Lovable Store installs straight from the live site as a web app.
+            It opens fullscreen with its own icon, keeps your bag and wishlist
+            close, and works offline for browsing.
+          </p>
+          <ol class="steps">
+            <li>
+              <b>1</b>
+              <span>Open the live store in Chrome on Android or Safari on iPhone.</span>
+            </li>
+            <li>
+              <b>2</b>
+              <span>Tap <strong>Install app</strong>, or choose <strong>Add to Home Screen</strong> from the share menu.</span>
+            </li>
+            <li>
+              <b>3</b>
+              <span>Launch Lovable Store from your home screen — it opens like a native app.</span>
+            </li>
+          </ol>
+        </div>
+
+        <aside class="install-card">
+          <img src="assets/app-icon.png" alt="Lovable Store app icon" width="64" height="64" />
+          <h3>Lovable Store</h3>
+          <p>
+            Where magic gift starts from. Fashion, fragrance, watches and
+            keepsakes, wrapped in Johannesburg.
+          </p>
+          <a class="button" href="__STORE_URL__">Open the live store</a>
+          <small>No download required · installs from the browser</small>
+        </aside>
+      </section>
+    </main>
+
+    <footer class="shell">
+      <span>Lovable Store · Johannesburg, South Africa</span>
+      <span>
+        <a href="https://github.com/nastechresearch/lovablestore">Source on GitHub</a>
+        · Where magic gift starts from
+      </span>
+    </footer>
+  </body>
+</html>

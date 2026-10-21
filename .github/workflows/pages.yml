@@ -1,0 +1,56 @@
+name: Deploy install page to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Point the page at the live store
+        env:
+          STORE_URL: ${{ vars.STORE_URL }}
+        run: |
+          if [ -z "$STORE_URL" ]; then
+            echo "::error::STORE_URL repository variable is not set."
+            exit 1
+          fi
+          case "$STORE_URL" in
+            https://*) ;;
+            *) echo "::error::STORE_URL must start with https://"; exit 1 ;;
+          esac
+          sed -i "s|__STORE_URL__|${STORE_URL}|g" site/index.html
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
