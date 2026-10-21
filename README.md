@@ -79,7 +79,7 @@ Node.js host.
 
 `android/` is a Capacitor 7 shell. It loads the hosted storefront in a WebView
 (`server.url` in `capacitor.config.ts`, default
-`https://lovablestore-two.vercel.app`), so the APK needs an internet
+`https://lovablestorex.vercel.app`), so the APK needs an internet
 connection and always shows the latest deployed store. It is not an offline
 native build.
 

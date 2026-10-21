@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: "Lovable Store",
   webDir: "public",
   server: {
-    url: process.env.CAPACITOR_SERVER_URL || "https://lovablestore-two.vercel.app",
+    url: process.env.CAPACITOR_SERVER_URL || "https://lovablestorex.vercel.app",
     cleartext: false,
   },
   android: {
