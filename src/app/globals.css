@@ -440,26 +440,6 @@
   animation: shimmer 2.5s linear infinite;
 }
 
-@keyframes delivery-ride {
-  0% {
-    left: 8%;
-    opacity: 0;
-    transform: translateY(-2px) scale(0.94);
-  }
-  8% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  82% {
-    opacity: 1;
-  }
-  100% {
-    left: calc(100% - 3.25rem);
-    opacity: 0;
-    transform: translateY(-1px) scale(0.98);
-  }
-}
-
 @keyframes barcode-pulse {
   0%,
   100% {
@@ -468,15 +448,6 @@
   50% {
     opacity: 0.55;
   }
-}
-
-.delivery-ride {
-  animation: delivery-ride 7.5s cubic-bezier(0.33, 0, 0.67, 1) infinite;
-}
-
-.delivery-ride-slow {
-  animation-duration: 10.5s;
-  animation-delay: 1.2s;
 }
 
 .barcode-live {

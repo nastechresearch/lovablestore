@@ -5,14 +5,14 @@ import {
   CarFront,
   Clock3,
   Info,
-  MapPin,
   PackageCheck,
   Plane,
   Route,
   ShieldCheck,
 } from "lucide-react";
-import { useReducedMotion } from "motion/react";
 import { formatDeliveryDate, type DeliveryPlan } from "@/lib/delivery";
+import { LiveDeliveryMap } from "@/components/delivery/live-delivery-map";
+import type { TrackPlace } from "@/lib/delivery-track";
 
 function VehicleIcon({
   vehicle,
@@ -26,68 +26,24 @@ function VehicleIcon({
   return <CarFront className={className} aria-hidden />;
 }
 
-function RouteTrack({ plan }: { plan: DeliveryPlan }) {
-  const reduced = useReducedMotion();
-  const laneOne =
-    plan.vehicle === "mixed"
-      ? "car"
-      : plan.vehicle === "plane"
-        ? "plane"
-        : plan.vehicle;
-  const laneTwo = plan.vehicle === "mixed" ? "plane" : null;
-
-  return (
-    <div className="relative mt-6 overflow-hidden border border-line bg-ivory-deep/30 px-4 py-6">
-      <div className="relative mx-2 h-24">
-        <div className="absolute left-0 right-0 top-1/2 border-t border-dashed border-stone/40" aria-hidden />
-        <div className="absolute left-0 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-cream text-[9px] font-medium uppercase tracking-[0.1em] text-stone">
-          JM
-        </div>
-        <div className="absolute right-0 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-oxblood text-ivory shadow-soft">
-          <MapPin className="size-4" aria-hidden />
-        </div>
-
-        <div
-          className={`absolute left-10 top-[calc(50%-40px)] text-champagne-dark ${
-            reduced ? "translate-x-[58%]" : "delivery-ride"
-          }`}
-          aria-hidden
-        >
-          <span className="flex size-9 items-center justify-center rounded-full border border-champagne/50 bg-cream shadow-soft">
-            <VehicleIcon vehicle={laneOne as DeliveryPlan["vehicle"]} className="size-4" />
-          </span>
-        </div>
-
-        {laneTwo ? (
-          <div
-            className={`absolute left-10 top-[calc(50%+14px)] text-oxblood/70 ${
-              reduced ? "translate-x-[42%]" : "delivery-ride delivery-ride-slow"
-            }`}
-            aria-hidden
-          >
-            <span className="flex size-8 items-center justify-center rounded-full border border-oxblood/20 bg-cream shadow-soft">
-              <VehicleIcon vehicle={laneTwo as DeliveryPlan["vehicle"]} className="size-3.5" />
-            </span>
-          </div>
-        ) : null}
-
-        <div className="absolute inset-x-0 -bottom-1 flex justify-between text-[8px] uppercase tracking-[0.12em] text-stone">
-          <span>Packed in Joburg</span>
-          <span>{plan.mode === "GLOBAL" ? "Customs · last mile" : "Your door"}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function DeliveryJourney({
   plan,
   compact = false,
   title = "Delivery estimate",
+  destination,
+  status,
+  orderNumber,
+  courier,
+  trackingNumber,
 }: {
   plan: DeliveryPlan;
   compact?: boolean;
   title?: string;
+  destination?: TrackPlace;
+  status?: string;
+  orderNumber?: string;
+  courier?: string | null;
+  trackingNumber?: string | null;
 }) {
   if (compact) {
     return (
@@ -129,7 +85,16 @@ export function DeliveryJourney({
       </div>
 
       <div className="px-5 py-5 sm:px-6">
-        <RouteTrack plan={plan} />
+        {destination && status && orderNumber ? (
+          <LiveDeliveryMap
+            status={status}
+            orderNumber={orderNumber}
+            destination={destination}
+            etaLabel={plan.windowLabel}
+            courier={courier}
+            trackingNumber={trackingNumber}
+          />
+        ) : null}
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           {plan.steps.map((step, index) => (
