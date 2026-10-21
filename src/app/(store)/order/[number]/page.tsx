@@ -20,8 +20,11 @@ import { getStoreSettings } from "@/lib/settings";
 import { deliveryPlanForOrder } from "@/lib/order-delivery";
 import { OrderTimeline } from "@/components/order/order-timeline";
 import { DeliveryJourney } from "@/components/delivery/delivery-journey";
+import { PackingScene } from "@/components/delivery/packing-scene";
+import { LiveOrderRefresh } from "@/components/delivery/live-order-refresh";
 import { ClearCartOnMount } from "@/components/cart/clear-cart-on-mount";
 import { Reveal } from "@/components/motion/reveal";
+import { resolveDestination } from "@/lib/delivery-track";
 
 export const dynamic = "force-dynamic";
 
@@ -92,6 +95,12 @@ export default async function OrderPage({
 
   const settings = await getStoreSettings();
   const deliveryPlan = deliveryPlanForOrder(order, settings);
+  const destination = resolveDestination(order.city, order.province);
+  const packingItems = order.items.map((item) => ({
+    name: item.name,
+    image: item.image,
+  }));
+  const liveRefresh = !["DELIVERED", "CANCELLED"].includes(order.status);
 
   return (
     <div className="container-lux py-10 sm:py-14">
@@ -137,11 +146,23 @@ export default async function OrderPage({
           ) : null}
 
           <div className="mt-8 border-t border-line pt-6">
+            <PackingScene status={order.status} items={packingItems} />
+          </div>
+
+          <div className="mt-6 border-t border-line pt-6">
             <OrderTimeline status={order.status} />
           </div>
 
           <div className="mt-6" data-print-hide>
-            <DeliveryJourney plan={deliveryPlan} title="When it arrives" />
+            <DeliveryJourney
+              plan={deliveryPlan}
+              title="When it arrives"
+              destination={destination}
+              status={order.status}
+              orderNumber={order.number}
+              courier={order.courier}
+              trackingNumber={order.trackingNumber}
+            />
           </div>
 
           {order.trackingNumber ? (
@@ -287,6 +308,8 @@ export default async function OrderPage({
           </div>
         </aside>
       </div>
+
+      <LiveOrderRefresh active={liveRefresh} />
     </div>
   );
 }

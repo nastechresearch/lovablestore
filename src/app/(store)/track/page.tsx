@@ -10,6 +10,9 @@ import { getStoreSettings } from "@/lib/settings";
 import { deliveryPlanForOrder } from "@/lib/order-delivery";
 import { OrderTimeline } from "@/components/order/order-timeline";
 import { DeliveryJourney } from "@/components/delivery/delivery-journey";
+import { PackingScene } from "@/components/delivery/packing-scene";
+import { LiveOrderRefresh } from "@/components/delivery/live-order-refresh";
+import { resolveDestination } from "@/lib/delivery-track";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +36,13 @@ export default async function TrackPage({
   const searched = Boolean(number);
   const settings = order ? await getStoreSettings() : null;
   const deliveryPlan = order && settings ? deliveryPlanForOrder(order, settings) : null;
+  const destination = order ? resolveDestination(order.city, order.province) : null;
+  const packingItems = order
+    ? order.items.map((item) => ({ name: item.name, image: item.image }))
+    : [];
+  const liveRefresh = order
+    ? !["DELIVERED", "CANCELLED"].includes(order.status)
+    : false;
 
   return (
     <div className="container-lux py-10 sm:py-14">
@@ -98,7 +108,8 @@ export default async function TrackPage({
 
         <div>
           {order ? (
-            <div className="border border-line bg-cream p-6 sm:p-8">
+            <>
+              <div className="border border-line bg-cream p-6 sm:p-8">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.14em] text-stone">Order</p>
@@ -112,13 +123,23 @@ export default async function TrackPage({
                 </span>
               </div>
 
+              <PackingScene status={order.status} items={packingItems} />
+
               <div className="mt-7 border-y border-line py-6">
                 <OrderTimeline status={order.status} />
               </div>
 
               {deliveryPlan ? (
                 <div className="mt-6">
-                  <DeliveryJourney plan={deliveryPlan} title="Estimated arrival" />
+                  <DeliveryJourney
+                    plan={deliveryPlan}
+                    title="Estimated arrival"
+                    destination={destination ?? undefined}
+                    status={order.status}
+                    orderNumber={order.number}
+                    courier={order.courier}
+                    trackingNumber={order.trackingNumber}
+                  />
                 </div>
               ) : null}
 
@@ -181,7 +202,9 @@ export default async function TrackPage({
                   </Link>
                 </div>
               </div>
-            </div>
+              </div>
+              <LiveOrderRefresh active={liveRefresh} />
+            </>
           ) : (
             <div className="hidden border border-line bg-cream/60 p-10 lg:block">
               <p className="font-display text-4xl leading-tight text-stone/70">
