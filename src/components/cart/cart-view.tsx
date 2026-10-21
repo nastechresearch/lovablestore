@@ -202,6 +202,9 @@ export function CartView() {
             </div>
           </dl>
           <p className="mt-2 text-[10px] text-stone">
+            Incl. 15% VAT. Delivery is free from R950, otherwise R85 nationwide.
+          </p>
+          <p className="mt-1 text-[10px] text-stone">
             Promo codes are applied securely at checkout.
           </p>
           <Link href="/checkout" className="btn-primary mt-6 w-full">

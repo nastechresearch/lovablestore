@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Package, Truck } from "lucide-react";
+import { ArrowRight, Package, ReceiptText, Truck } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import { formatDate, formatZAR } from "@/lib/format";
@@ -22,6 +22,9 @@ export default async function AccountOrdersPage() {
     include: { items: true },
     orderBy: { createdAt: "desc" },
   });
+  const lifetime = orders
+    .filter((order) => order.paymentStatus === "paid")
+    .reduce((sum, order) => sum + order.total, 0);
 
   return (
     <div>
@@ -41,6 +44,19 @@ export default async function AccountOrdersPage() {
           Track a parcel
         </Link>
       </div>
+
+      {orders.length > 0 ? (
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:max-w-md">
+          <div className="border border-line bg-cream px-4 py-3">
+            <p className="text-[9px] uppercase tracking-[0.14em] text-stone">Orders placed</p>
+            <p className="mt-1 font-display text-2xl leading-none">{orders.length}</p>
+          </div>
+          <div className="border border-line bg-cream px-4 py-3">
+            <p className="text-[9px] uppercase tracking-[0.14em] text-stone">Paid to date</p>
+            <p className="mt-1 font-display text-2xl leading-none">{formatZAR(lifetime)}</p>
+          </div>
+        </div>
+      ) : null}
 
       {orders.length === 0 ? (
         <div className="mt-8 border border-dashed border-line bg-cream p-10 text-center">
@@ -115,13 +131,22 @@ export default async function AccountOrdersPage() {
                       </span>
                     )}
                   </div>
-                  <Link
-                    href={`/order/${order.number}?email=${encodeURIComponent(order.email)}`}
-                    className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] text-oxblood transition-colors hover:text-ink"
-                  >
-                    View order
-                    <ArrowRight className="size-3.5" aria-hidden />
-                  </Link>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Link
+                      href={`/order/${order.number}/invoice?email=${encodeURIComponent(order.email)}`}
+                      className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] text-stone transition-colors hover:text-oxblood"
+                    >
+                      <ReceiptText className="size-3.5" aria-hidden />
+                      Invoice
+                    </Link>
+                    <Link
+                      href={`/order/${order.number}?email=${encodeURIComponent(order.email)}`}
+                      className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] text-oxblood transition-colors hover:text-ink"
+                    >
+                      View order
+                      <ArrowRight className="size-3.5" aria-hidden />
+                    </Link>
+                  </div>
                 </div>
               </li>
             );

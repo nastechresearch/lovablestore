@@ -12,7 +12,17 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Native shells and generated web assets.
+    "android/**",
+    "ios/**",
+    "public/images/.qoder/**",
   ]),
+  {
+    rules: {
+      // Hydration-aware initialisation intentionally syncs state once on mount.
+      "react-hooks/set-state-in-effect": "warn",
+    },
+  },
 ]);
 
 export default eslintConfig;

@@ -47,3 +47,17 @@ next-env.d.ts
 /prisma/*.db
 /prisma/*.db-journal
 /public/images/.qoder/
+
+# android / capacitor build artefacts
+/android/.gradle/
+/android/build/
+/android/app/build/
+/android/local.properties
+/android/.idea/
+/android/.kotlin/
+/android/app/src/main/assets/public/
+/android/app/src/main/assets/capacitor.config.json
+/android/app/src/main/assets/capacitor.plugins.json
+/android/capacitor-cordova-android-plugins/build/
+*.jks
+*.keystore

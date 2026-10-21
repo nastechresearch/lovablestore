@@ -1,14 +1,51 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Gem, HandHeart, MapPin, PackageCheck, Sparkles } from "lucide-react";
 import { InfoPage } from "@/components/content/info-page";
+import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/reveal";
+import { SA_PROVINCES, SA_PLACES } from "@/lib/sa-locations";
 
 export const metadata: Metadata = {
   title: "Our story",
   description:
     "Lovable Store is a Johannesburg gifting atelier merging local makers with a vetted global supplier network.",
 };
+
+const PROVINCE_CITIES: Record<string, string> = {
+  "Eastern Cape": "Gqeberha · East London · Makhanda",
+  "Free State": "Bloemfontein · Bethlehem · Welkom",
+  Gauteng: "Johannesburg · Pretoria · Sandton",
+  "KwaZulu-Natal": "Durban · Umhlanga · Pietermaritzburg",
+  Limpopo: "Polokwane · Tzaneen · Thohoyandou",
+  Mpumalanga: "Mbombela · Emalahleni · Secunda",
+  "Northern Cape": "Kimberley · Upington · Springbok",
+  "North West": "Rustenburg · Mahikeng · Potchefstroom",
+  "Western Cape": "Cape Town · Stellenbosch · George",
+};
+
+const VALUES = [
+  {
+    icon: Gem,
+    title: "Considered, not crowded",
+    body: "A tight edit of watches, fragrance, fashion and gifts. Every piece earns its place before it reaches the shelf.",
+  },
+  {
+    icon: HandHeart,
+    title: "Wrapped by hand",
+    body: "Ivory packaging, ribbon and a handwritten note when you add one. The unwrapping is part of the gift.",
+  },
+  {
+    icon: PackageCheck,
+    title: "Checked before dispatch",
+    body: "Every order is inspected for accuracy and condition, whether it ships from Johannesburg or our global atelier.",
+  },
+  {
+    icon: Sparkles,
+    title: "Real people, real answers",
+    body: "WhatsApp, email or phone — you reach someone who can actually fix the thing you're asking about.",
+  },
+];
 
 export default function AboutPage() {
   return (
@@ -50,7 +87,7 @@ export default function AboutPage() {
 
         <div className="not-prose grid gap-4 py-2 sm:grid-cols-3">
           {[
-            { value: "35+", label: "Curated pieces" },
+            { value: "100", label: "Curated pieces" },
             { value: "2–5", label: "Days, local delivery" },
             { value: "30", label: "Day returns" },
           ].map((stat) => (
@@ -83,6 +120,71 @@ export default function AboutPage() {
           <Link href="/shop">browse the current edit</Link>.
         </p>
       </InfoPage>
+
+      <section className="border-t border-line bg-cream/50">
+        <div className="container-lux py-14 sm:py-20">
+          <Reveal>
+            <p className="eyebrow text-champagne-dark">What we stand for</p>
+            <h2 className="mt-2 max-w-[18ch] font-display text-4xl leading-[0.98] sm:text-5xl">
+              Small list.
+              <br />
+              <span className="italic text-oxblood">High bar.</span>
+            </h2>
+          </Reveal>
+          <StaggerGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {VALUES.map((value) => (
+              <StaggerItem key={value.title}>
+                <div className="flex h-full flex-col border border-line bg-cream p-6">
+                  <value.icon className="size-5 text-champagne-dark" aria-hidden />
+                  <h3 className="mt-4 font-display text-xl leading-tight">{value.title}</h3>
+                  <p className="mt-2 text-[12px] leading-relaxed text-stone">{value.body}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      <section className="border-t border-line">
+        <div className="container-lux grid gap-10 py-14 sm:py-20 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+          <Reveal>
+            <p className="eyebrow text-champagne-dark">Delivered nationwide</p>
+            <h2 className="mt-2 max-w-[14ch] font-display text-4xl leading-[0.98] sm:text-5xl">
+              All nine provinces.
+              <br />
+              <span className="italic text-oxblood">{SA_PLACES.length} places.</span>
+            </h2>
+            <p className="mt-5 max-w-[42ch] text-sm leading-relaxed text-stone">
+              Checkout detects where you are, fills in the closest town and postal
+              code, and still lets you type any suburb that isn&apos;t listed.
+              Courier updates land by SMS and in your account.
+            </p>
+            <div className="mt-7 inline-flex items-center gap-2 border border-line bg-cream px-4 py-3 text-[10px] uppercase tracking-[0.14em] text-ink-soft">
+              <MapPin className="size-3.5 text-champagne-dark" aria-hidden />
+              Studio in Johannesburg · nationwide courier
+            </div>
+            <p className="mt-3 text-[10px] leading-relaxed text-stone">
+              Free delivery from R950. Below that, a flat R85 anywhere in South Africa.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.12}>
+            <ul className="grid gap-px overflow-hidden border border-line bg-line sm:grid-cols-2">
+              {SA_PROVINCES.map((province) => (
+                <li key={province} className="bg-cream p-4">
+                  <p className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink">
+                    <MapPin className="size-3 text-champagne-dark" aria-hidden />
+                    {province}
+                  </p>
+                  <p className="mt-1.5 text-[10.5px] leading-relaxed text-stone">
+                    {PROVINCE_CITIES[province]}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+      </section>
 
       <section className="border-t border-line">
         <div className="container-lux grid gap-6 py-12 lg:grid-cols-2">

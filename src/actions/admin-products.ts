@@ -122,7 +122,7 @@ async function parseProduct(
   if (Object.keys(errors).length > 0) return { errors };
   if (price === null) return { errors };
 
-  let connection = supplierConnectionId
+  const connection = supplierConnectionId
     ? await prisma.supplierConnection.findUnique({ where: { id: supplierConnectionId } })
     : null;
   if (supplierConnectionId && !connection) {

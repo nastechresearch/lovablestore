@@ -83,7 +83,7 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`group relative py-2 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors ${
+                  className={`group relative whitespace-nowrap py-2 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors ${
                     accent ? "text-oxblood" : "text-ink hover:text-oxblood"                  }`}
                 >
                   {link.label}
@@ -205,6 +205,7 @@ export function Header() {
                   { label: "Custom atelier", href: "/studio" },
                   { label: "Mzansi moments", href: "/moments" },
                   { label: "Lookbook", href: "/lookbook" },
+                  { label: "Our story", href: "/about" },
                   { label: "Offers", href: "/promos" },
                   { label: "Valentine's", href: "/valentines" },
                 ].map((link, index) => (

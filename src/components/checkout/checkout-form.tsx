@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useMemo, useRef, useState } from "react";
+import type { FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
@@ -9,7 +10,6 @@ import {
   Check,
   CreditCard,
   Gift,
-  LockKeyhole,
   Loader2,
   MapPin,
   ShieldCheck,
@@ -22,7 +22,8 @@ import type { CheckoutState } from "@/actions/checkout";
 import { checkPromoAction } from "@/actions/promo";
 import type { PromoCheck } from "@/actions/promo";
 import { useCart } from "@/components/cart/cart-provider";
-import { PROVINCES } from "@/lib/constants";
+import { CardPayment } from "@/components/checkout/card-payment";
+import { LocationFields } from "@/components/checkout/location-fields";
 import { formatZAR, shippingForSubtotal } from "@/lib/format";
 import { needsPlainImage } from "@/lib/products";
 
@@ -53,6 +54,18 @@ export function CheckoutForm({
   const [promoChecking, setPromoChecking] = useState(false);
   const [promoError, setPromoError] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const cardValidatorRef = useRef<(() => boolean) | null>(null);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    const validator = cardValidatorRef.current;
+    if (!validator) return;
+    if (!validator()) {
+      event.preventDefault();
+      document
+        .getElementById("payment-heading")
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
 
   const cartPayload = useMemo(
     () =>
@@ -148,7 +161,7 @@ export function CheckoutForm({
   }
 
   return (
-    <form ref={formRef} action={formAction} className="grid gap-10 pb-24 lg:grid-cols-[1.3fr_0.7fr] lg:gap-14 lg:pb-0">
+    <form ref={formRef} action={formAction} onSubmit={handleSubmit} className="grid gap-10 pb-24 lg:grid-cols-[1.3fr_0.7fr] lg:gap-14 lg:pb-0">
       <input type="hidden" name="cart" value={cartPayload} />
       <input type="hidden" name="promoCode" value={applied?.ok ? promoCode : ""} />
 
@@ -226,29 +239,16 @@ export function CheckoutForm({
               <input id="address" name="address" autoComplete="street-address" className="field" placeholder="12 Rose Street, Parkhurst" required />
               <FieldError message={state.fieldErrors?.address} />
             </div>
-            <div>
-              <label htmlFor="city" className="label">City / suburb</label>
-              <input id="city" name="city" autoComplete="address-level2" className="field" required />
-              <FieldError message={state.fieldErrors?.city} />
-            </div>
-            <div>
-              <label htmlFor="province" className="label">Province</label>
-              <select id="province" name="province" autoComplete="address-level1" className="field" defaultValue="" required>
-                <option value="" disabled>Select province</option>
-                {PROVINCES.map((province) => (
-                  <option key={province} value={province}>{province}</option>
-                ))}
-              </select>
-              <FieldError message={state.fieldErrors?.province} />
-            </div>
-            <div>
-              <label htmlFor="postalCode" className="label">Postal code</label>
-              <input id="postalCode" name="postalCode" autoComplete="postal-code" inputMode="numeric" className="field" placeholder="2193" required />
-              <FieldError message={state.fieldErrors?.postalCode} />
-            </div>
-            <div>
+            <LocationFields
+              errors={{
+                city: state.fieldErrors?.city,
+                province: state.fieldErrors?.province,
+                postalCode: state.fieldErrors?.postalCode,
+              }}
+            />
+            <div className="sm:col-span-2">
               <label htmlFor="notes" className="label">Delivery notes <span className="normal-case tracking-normal text-stone">(optional)</span></label>
-              <input id="notes" name="notes" className="field" placeholder="Gate code, complex name…" />
+              <input id="notes" name="notes" className="field" placeholder="Gate code, complex name, landmark…" />
               <FieldError message={state.fieldErrors?.notes} />
             </div>
           </div>
@@ -287,21 +287,20 @@ export function CheckoutForm({
               Payment
             </h2>
           </div>
-          <div className="mt-5 border border-line bg-cream p-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="flex items-center gap-2 text-[12px] font-medium">
-                <LockKeyhole className="size-4 text-champagne-dark" aria-hidden />
-                {demo ? "Demo secure checkout" : "PayFast secure payment"}
-              </p>
-              <span className="text-[9px] uppercase tracking-[0.16em] text-stone">
-                Visa · Mastercard · Instant EFT
-              </span>
-            </div>
-            <p className="mt-3 text-[11px] leading-relaxed text-stone">
-              {demo
-                ? "PayFast merchant credentials are not configured in this environment. Placing the order creates a paid demo order so you can test fulfilment, tracking and admin tools end to end."
-                : "You will be redirected to PayFast to pay securely. We never see or store your card details. Your order is confirmed the moment PayFast notifies us."}
-            </p>
+          <div className="mt-5">
+            <CardPayment
+              demo={demo}
+              total={total}
+              formRef={formRef}
+              errorSignal={state.status === "error" ? state.message : ""}
+              validatorRef={cardValidatorRef}
+              onConfirm={() => formRef.current?.requestSubmit()}
+              onBlocked={() =>
+                document
+                  .getElementById("payment-heading")
+                  ?.scrollIntoView({ behavior: "smooth", block: "center" })
+              }
+            />
           </div>
         </section>
 
@@ -426,9 +425,13 @@ export function CheckoutForm({
               <dd className="font-display text-3xl">{formatZAR(total)}</dd>
             </div>
           </dl>
+          <p className="mt-2 text-[9.5px] text-stone">
+            All prices include 15% VAT. Free delivery from R950, otherwise R85 nationwide.
+          </p>
 
           <button
             type="submit"
+            data-checkout-commit
             disabled={pending}
             className="btn-primary mt-6 w-full disabled:cursor-wait disabled:opacity-70"
           >
@@ -439,7 +442,7 @@ export function CheckoutForm({
               </>
             ) : (
               <>
-                {demo ? "Place demo order" : "Pay securely"}
+                {demo ? "Complete demo order" : "Swipe or pay securely"}
                 <ArrowRight className="size-4" aria-hidden />
               </>
             )}
@@ -470,6 +473,7 @@ export function CheckoutForm({
           </div>
           <button
             type="submit"
+            data-checkout-commit
             disabled={pending}
             className="btn-primary shrink-0 px-5 text-[10px] disabled:cursor-wait disabled:opacity-70"
           >
@@ -480,7 +484,7 @@ export function CheckoutForm({
               </>
             ) : (
               <>
-                {demo ? "Place order" : "Pay securely"}
+                {demo ? "Complete order" : "Pay securely"}
                 <ArrowRight className="size-3.5" aria-hidden />
               </>
             )}

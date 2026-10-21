@@ -135,7 +135,8 @@ export function ProductPurchase({
           ) : null}
         </div>
         <p className="mt-1.5 text-[11px] text-stone">
-          Or 4 interest-free payments of {formatZAR(Math.round(product.price / 4))} ·{" "}
+          Incl. 15% VAT · Or 4 interest-free payments of{" "}
+          {formatZAR(Math.round(product.price / 4))} ·{" "}
           <Link href="/delivery-and-returns" className="underline decoration-line underline-offset-2 hover:text-oxblood">
             delivery &amp; returns
           </Link>

@@ -44,7 +44,7 @@ export async function submitReviewAction(
   }
 
   const user = await getCurrentUser();
-  let name = user ? `${user.firstName} ${user.lastName}`.trim() : text(formData, "name").slice(0, 60);
+  const name = user ? `${user.firstName} ${user.lastName}`.trim() : text(formData, "name").slice(0, 60);
   let email = user?.email ?? "";
   let verified = false;
 
