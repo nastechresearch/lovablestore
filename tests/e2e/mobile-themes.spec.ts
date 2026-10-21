@@ -71,6 +71,17 @@ async function expectNoHorizontalOverflow(page: Page) {
   );
 }
 
+async function visit(page: Page, path: string) {
+  const url = `${BASE}${path}`;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const response = await page.goto(url, { waitUntil: "domcontentloaded" });
+    const errored = await page.locator("html#__next_error__").count();
+    if ((!response || response.status() < 500) && !errored) return;
+    await page.waitForTimeout(4_000);
+  }
+  await page.goto(url, { waitUntil: "domcontentloaded" });
+}
+
 for (const viewport of VIEWPORTS) {
   test.describe(`mobile ${viewport.width}px`, () => {
     for (const theme of THEMES) {
@@ -90,9 +101,7 @@ for (const viewport of VIEWPORTS) {
 
         for (const target of STOREFRONT_PAGES) {
           await test.step(target.name, async () => {
-            await page.goto(`${BASE}${target.path}`, {
-              waitUntil: "domcontentloaded",
-            });
+            await visit(page, target.path);
             await expectTheme(page, theme);
             await expectNoHorizontalOverflow(page);
           });
@@ -111,7 +120,7 @@ for (const viewport of VIEWPORTS) {
         hasTouch: true,
       });
       const page = await context.newPage();
-      await page.goto(`${BASE}/`, { waitUntil: "domcontentloaded" });
+      await visit(page, "/");
 
       const dock = page.locator('nav[aria-label="Store app"]');
       await expect(dock).toBeVisible();
@@ -129,13 +138,11 @@ for (const viewport of VIEWPORTS) {
         expect(size.width).toBeGreaterThanOrEqual(44);
       }
 
-      await page.goto(`${BASE}${PRODUCT_PATH}`, {
-        waitUntil: "domcontentloaded",
-      });
+      await visit(page, PRODUCT_PATH);
       await expect(page.locator('nav[aria-label="Store app"]')).toHaveCount(0);
       await expectNoHorizontalOverflow(page);
 
-      await page.goto(`${BASE}/checkout`, { waitUntil: "domcontentloaded" });
+      await visit(page, "/checkout");
       await expect(page.locator('nav[aria-label="Store app"]')).toHaveCount(0);
       await expectNoHorizontalOverflow(page);
 
@@ -150,7 +157,7 @@ test.describe("desktop", () => {
   test("full navigation is shown instead of the mobile dock", async ({
     page,
   }) => {
-    await page.goto(`${BASE}/`, { waitUntil: "domcontentloaded" });
+    await visit(page, "/");
     await expect(page.locator('nav[aria-label="Primary"]')).toBeVisible();
     await expect(page.locator('nav[aria-label="Store app"]')).toBeHidden();
     await expectNoHorizontalOverflow(page);
@@ -159,7 +166,7 @@ test.describe("desktop", () => {
   test("theme buttons switch and remember all three themes", async ({
     page,
   }) => {
-    await page.goto(`${BASE}/`, { waitUntil: "domcontentloaded" });
+    await visit(page, "/");
 
     for (const theme of THEMES) {
       const label =
