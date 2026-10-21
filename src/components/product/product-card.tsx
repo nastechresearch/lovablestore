@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import { ArrowUpRight, Plus, Star } from "lucide-react";
 import { useCart } from "@/components/cart/cart-provider";
 import { WishlistButton } from "@/components/wishlist/wishlist-button";
+import { flyToBag } from "@/components/motion/fly-to-bag";
 import { formatZAR } from "@/lib/format";
 import {
   deliveryLabel,
@@ -22,12 +24,17 @@ export function ProductCard({
   priority?: boolean;
 }) {
   const { addItem } = useCart();
+  const reduce = useReducedMotion();
+  const rotateXValue = useMotionValue(0);
+  const rotateYValue = useMotionValue(0);
+  const rotateX = useSpring(rotateXValue, { stiffness: 220, damping: 22 });
+  const rotateY = useSpring(rotateYValue, { stiffness: 220, damping: 22 });
   const primary = imageFor(product);
   const secondary = product.images[1];
   const hasSizes = product.sizes.length > 0;
   const local = isLocalProduct(product);
 
-  function quickAdd() {
+  function quickAdd(origin: HTMLButtonElement) {
     addItem({
       productId: product.id,
       slug: product.slug,
@@ -36,11 +43,30 @@ export function ProductCard({
       image: primary,
       stock: product.stock,
     });
+    const rect = origin.getBoundingClientRect();
+    flyToBag({
+      image: primary,
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    });
   }
 
   return (
     <article className="group relative flex h-full flex-col">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ivory-deep">
+      <motion.div
+        className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ivory-deep will-change-transform"
+        style={reduce ? undefined : { rotateX, rotateY, transformPerspective: 900 }}
+        onPointerMove={(event) => {
+          if (reduce || event.pointerType === "touch") return;
+          const rect = event.currentTarget.getBoundingClientRect();
+          rotateYValue.set(((event.clientX - rect.left) / rect.width - 0.5) * 6);
+          rotateXValue.set(-((event.clientY - rect.top) / rect.height - 0.5) * 6);
+        }}
+        onPointerLeave={() => {
+          rotateXValue.set(0);
+          rotateYValue.set(0);
+        }}
+      >
         <Link href={`/product/${product.slug}`} className="absolute inset-0 z-10" aria-label={`View ${product.name}`}>
           <Image
             src={primary}
@@ -87,14 +113,14 @@ export function ProductCard({
         ) : (
           <button
             type="button"
-            onClick={quickAdd}
+            onClick={(event) => quickAdd(event.currentTarget)}
             className="absolute bottom-3 right-3 z-20 flex size-11 translate-y-0 items-center justify-center rounded-full bg-cream/95 text-ink opacity-100 shadow-soft backdrop-blur-sm transition-all duration-300 hover:bg-oxblood hover:text-ivory md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:focus:translate-y-0 md:focus:opacity-100"
             aria-label={`Add ${product.name} to bag`}
           >
             <Plus className="size-4" aria-hidden />
           </button>
         )}
-      </div>
+      </motion.div>
 
       <div className="flex flex-1 flex-col pt-4">
         <p className="text-[9.5px] font-medium uppercase tracking-[0.16em] text-stone">

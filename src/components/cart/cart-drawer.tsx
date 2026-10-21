@@ -97,12 +97,16 @@ export function CartDrawer() {
                   ? `You're ${formatZAR(remaining)} away from complimentary delivery.`
                   : "Complimentary delivery unlocked."}
               </p>
-              <div className="mt-3 h-[3px] overflow-hidden bg-ivory-deep">
+              <div className="relative mt-3 h-[3px] overflow-hidden bg-ivory-deep">
                 <motion.div
                   className="h-full origin-left bg-oxblood"
                   initial={false}
                   animate={{ scaleX: progress / 100 }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                />
+                <span
+                  className="animate-shimmer pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/45 to-transparent"
+                  aria-hidden
                 />
               </div>
             </div>

@@ -19,6 +19,7 @@ import { deliveryLabel } from "@/lib/products";
 import type { StoreProduct } from "@/lib/products";
 import { PromoCodeChip } from "@/components/promo/promo-code-chip";
 import { DeliveryJourney } from "@/components/delivery/delivery-journey";
+import { flyToBag } from "@/components/motion/fly-to-bag";
 import type { DeliveryPlan } from "@/lib/delivery";
 
 type PromoHint = { code: string; label: string; description: string | null };
@@ -75,7 +76,7 @@ export function ProductPurchase({
     return size;
   }
 
-  function handleAdd(openDrawer = true) {
+  function handleAdd(openDrawer = true, origin?: HTMLElement) {
     if (soldOut) return;
     const chosen = resolveSize();
     if (chosen === null) return;
@@ -92,6 +93,14 @@ export function ProductPurchase({
       },
       quantity,
     );
+    if (origin) {
+      const rect = origin.getBoundingClientRect();
+      flyToBag({
+        image: primaryImage,
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+      });
+    }
     if (!openDrawer) {
       router.push("/checkout");
       return;
@@ -211,7 +220,7 @@ export function ProductPurchase({
 
           <button
             type="button"
-            onClick={() => handleAdd(true)}
+            onClick={(event) => handleAdd(true, event.currentTarget)}
             disabled={soldOut}
             className="btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-40"
           >
@@ -233,7 +242,7 @@ export function ProductPurchase({
 
         <button
           type="button"
-          onClick={() => handleAdd(false)}
+          onClick={(event) => handleAdd(false, event.currentTarget)}
           disabled={soldOut}
           className="btn-outline mt-3 w-full disabled:cursor-not-allowed disabled:opacity-40"
         >
@@ -325,7 +334,7 @@ export function ProductPurchase({
             ) : (
               <button
                 type="button"
-                onClick={() => handleAdd(true)}
+                onClick={(event) => handleAdd(true, event.currentTarget)}
                 disabled={soldOut}
                 className="btn-primary shrink-0 px-5 text-[10px] disabled:opacity-40"
               >

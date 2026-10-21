@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { SplitHeadline } from "@/components/motion/split-headline";
 import { SealBadge } from "@/components/motion/seal-badge";
@@ -12,6 +12,8 @@ import type { StoreProduct } from "@/lib/products";
 
 export function Hero({ products }: { products: StoreProduct[] }) {
   const reduce = useReducedMotion();
+  const { scrollY } = useScroll();
+  const imageY = useTransform(scrollY, [0, 700], [0, -42]);
   const watch =
     products.find((product) => product.category === "Watches") ?? products[0];
   const scent =
@@ -105,6 +107,7 @@ export function Hero({ products }: { products: StoreProduct[] }) {
               initial={reduce ? false : { opacity: 0, scale: 1.035 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              style={reduce ? undefined : { y: imageY }}
             >
               <Image
                 src="/images/editorial/editorial-fashion.jpg"

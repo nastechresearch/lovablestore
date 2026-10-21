@@ -136,9 +136,15 @@ export function Header() {
             >
               <Heart className="size-[19px]" aria-hidden />
               {wishlistReady && wishlistCount > 0 ? (
-                <span className="absolute right-0.5 top-0.5 flex size-[18px] items-center justify-center rounded-full bg-oxblood text-[10px] font-medium text-ivory">
+                <motion.span
+                  key={`wish-${wishlistCount}`}
+                  className="absolute right-0.5 top-0.5 flex size-[18px] items-center justify-center rounded-full bg-oxblood text-[10px] font-medium text-ivory"
+                  initial={{ scale: 0.65 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 420, damping: 16 }}
+                >
                   {wishlistCount > 9 ? "9+" : wishlistCount}
-                </span>
+                </motion.span>
               ) : null}
             </Link>
             <Link
@@ -150,6 +156,7 @@ export function Header() {
             </Link>
             <button
               type="button"
+              id="bag-target"
               onClick={() => {
                 setMenuOpen(false);
                 openCart();
@@ -159,9 +166,15 @@ export function Header() {
             >
               <ShoppingBag className="size-[19px]" aria-hidden />
               {hydrated && count > 0 ? (
-                <span className="absolute right-0.5 top-0.5 flex size-[18px] items-center justify-center rounded-full bg-oxblood text-[10px] font-medium text-ivory">
+                <motion.span
+                  key={`bag-${count}`}
+                  className="absolute right-0.5 top-0.5 flex size-[18px] items-center justify-center rounded-full bg-oxblood text-[10px] font-medium text-ivory"
+                  initial={{ scale: 0.65 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 420, damping: 16 }}
+                >
                   {count > 9 ? "9+" : count}
-                </span>
+                </motion.span>
               ) : null}
             </button>
           </div>
